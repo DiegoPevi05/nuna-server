@@ -59,7 +59,7 @@ class ZoomController extends Controller
             ]);
           
             $token = json_decode($response->getBody()->getContents(), true);
-            $tokenZoom = TokenZoom::create([
+            $tokenDb->update([
                 'access_token' => json_encode($token),
             ]);
 
@@ -117,16 +117,17 @@ class ZoomController extends Controller
 
         $tokenDb = TokenZoom::orderBy('created_at', 'desc')->first();
 
-        if(!$tokenDB){
-            $tokenzoom = TokenZoom::create([
-                'CLIENT_ID_ZOOM' => $validatedData['CLIENT_ID'],
-                'CLIENT_SECRET_ZOOM' => $validatedData['CLIENT_SECRET']
-            ]);
-        }else{
+        if($tokenDb){
             $tokenDb->update([
                 'CLIENT_ID_ZOOM' => $validatedData['CLIENT_ID'],
                 'CLIENT_SECRET_ZOOM' => $validatedData['CLIENT_SECRET']
             ]); 
+        }else{
+            $tokenzoom = TokenZoom::create([
+                'CLIENT_ID_ZOOM' => $validatedData['CLIENT_ID'],
+                'CLIENT_SECRET_ZOOM' => $validatedData['CLIENT_SECRET'],
+            ]);
+            
         }
 
         $return_message = 'Claves de ZOOM actualizadas exitosamente.';

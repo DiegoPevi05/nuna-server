@@ -12,6 +12,8 @@ class TokenZoom extends Model
     protected $table = 'token_zooms';
 
     protected $fillable = [
+        'CLIENT_ID_ZOOM',
+        'CLIENT_SECRET_ZOOM',
         'access_token',
     ];
 }

@@ -10,6 +10,8 @@ use App\Models\Service;
 use App\Models\TokenZoom;
 use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleHttpClient;
+use Illuminate\Support\Facades\Log;
+
 
 
 class MeetService
@@ -209,7 +211,7 @@ class MeetService
                     "settings" => [
                         "jbh_time" => 0,
                         "join_before_host" => true,
-                        "contact_email" =>  "administracion@nuna.com.pe",
+                        "contact_email" =>  env('INFO_EMAIL'),
                         "meeting_authentication" => false,
                         "meeting_invitees" => [
                             [
@@ -239,11 +241,12 @@ class MeetService
         }catch(\Exception $e){
             if( 401 == $e->getCode()) {
                 $refresh_token = $arrToken['refresh_token'];
+                Log::info($refresh_token);
       
                 $client = new GuzzleHttpClient(['base_uri' => 'https://zoom.us']);
                 $response = $client->request('POST', '/oauth/token', [
                     "headers" => [
-                        "Authorization" => "Basic ". base64_encode(env('CLIENT_ID_ZOOM').':'.env('CLIENT_SECRET_ZOOM'))
+                        "Authorization" => "Basic ". base64_encode($tokenDb->CLIENT_ID_ZOOM . ':' . $tokenDb->CLIENT_SECRET_ZOOM)
                     ],
                     'form_params' => [
                         "grant_type" => "refresh_token",
@@ -251,8 +254,10 @@ class MeetService
                     ],
                 ]);
 
+                $token_refresh_response = json_decode($response->getBody()->getContents(), true);
+                Log::info($token_refresh_response);
                 $tokenDb->update([
-                    'access_token' => json_encode($response->getBody())
+                    'access_token' => json_encode($token_refresh_response)
                 ]);
       
                 $this->GenerateMeetLink($user_id, $specialist_id, $date_meet,$minutes);

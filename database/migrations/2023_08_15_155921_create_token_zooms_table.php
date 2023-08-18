@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('CLIENT_ID_ZOOM',2500);
             $table->string('CLIENT_SECRET_ZOOM',2500);
-            $table->string('access_token',2500);
+            $table->string('access_token',2500)->nullable();
             $table->timestamps();
         });
     }
