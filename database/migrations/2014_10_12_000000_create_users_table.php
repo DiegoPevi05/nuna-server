@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('recover_token_time')->nullable();
+            $table->enum('role', ['USER','SPECIALIST','MODERATOR','ADMIN'])->default('USER')->nullable(false);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
