@@ -1,4 +1,4 @@
-<div class="navbar navbar-vertical navbar-expand navbar-dark">
+<div class="navbar navbar-vertical navbar-expand navbar-dark" style="width:260px">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button">
             <span class="navbar-toggler-icon"></span>
