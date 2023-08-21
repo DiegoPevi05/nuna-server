@@ -56,7 +56,7 @@ To install the project on your local machine, you can follow these steps:
 
 Here are some screenshots showcasing the dashboard in action:
 
-- ![Image1](https://github.com/DiegoPevi05/nuna-server/blob/main/public/github/Dashboard_1.png?raw=true)
+- ![Image1](https://github.com/DiegoPevi05/nuna-server/main/public/github/Dashboard_1.png?raw=true)
 - ![Image2](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
 - ![Image3](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
 
