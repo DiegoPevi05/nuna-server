@@ -24,7 +24,6 @@
                 text-decoration: none !important; 
             }
     </style>
-    <link rel="stylesheet" type="text/css" href="../../css/app.css"/>
     @stack('styles')
 </head>
 <body>

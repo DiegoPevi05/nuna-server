@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2eef20f2c2de7421e3e9c9bc4cd6fd5",
+    "content-hash": "ca6601e571796f51fe7f69b2b47e767c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2030,6 +2030,46 @@
                 }
             ],
             "time": "2023-08-05T12:09:49+00:00"
+        },
+        {
+            "name": "mercadopago/dx-php",
+            "version": "dev-poc-mapping",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mercadopago/sdk-php.git",
+                "reference": "645dd3350c2b8a80058b2e1a7a0fef262df9538f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mercadopago/sdk-php/zipball/645dd3350c2b8a80058b2e1a7a0fef262df9538f",
+                "reference": "645dd3350c2b8a80058b2e1a7a0fef262df9538f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MercadoPago\\": [
+                        "src/MercadoPago",
+                        "tests/MercadoPago"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "[POC] Mercado Pago PHP SDK",
+            "homepage": "https://github.com/mercadopago/sdk-php",
+            "support": {
+                "source": "https://github.com/mercadopago/sdk-php/tree/poc-mapping"
+            },
+            "time": "2023-05-04T12:36:45+00:00"
         },
         {
             "name": "monolog/monolog",

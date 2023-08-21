@@ -63,8 +63,4 @@ class User extends Authenticatable implements JWTSubject
         return [];
     } 
 
-    public function specialist()
-    {
-        return $this->hasOne(Specialist::class);
-    }
 }

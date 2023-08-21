@@ -100,21 +100,25 @@
                                                   </div>
                                                   <div class="col-2">
                                                       <strong>
-                                                          @php
-                                                              $now = now();
-                                                              $logDate = $log->created_at;
-                                                              if ($logDate->isToday()) {
-                                                                  echo $logDate->format('H:i');
-                                                              } elseif ($logDate->isYesterday()) {
-                                                                  echo 'Ayer';
-                                                              } elseif ($logDate->isThisWeek()) {
-                                                                  echo 'Esta semana';
-                                                              } elseif ($logDate->isThisMonth()) {
-                                                                  echo 'Este mes';
-                                                              } else {
-                                                                  echo $logDate->format('d/m/Y');
-                                                              }
-                                                          @endphp
+                                                        @php
+                                                            $now = now();
+                                                            $logDate = $log->created_at;
+
+                                                            $startOfWeek = $now->copy()->startOfWeek();
+                                                            $endOfWeek = $now->copy()->endOfWeek();
+
+                                                            if ($logDate->isToday()) {
+                                                                echo $logDate->format('H:i');
+                                                            } elseif ($logDate->isYesterday()) {
+                                                                echo 'Ayer';
+                                                            } elseif ($logDate >= $startOfWeek && $logDate <= $endOfWeek) {
+                                                                echo 'Esta semana';
+                                                            } elseif ($logDate->isSameMonth($now)) {
+                                                                echo 'Este mes';
+                                                            } else {
+                                                                echo $logDate->format('d/m/Y');
+                                                            }
+                                                        @endphp
                                                       </strong>
                                                   </div>
                                               </div>

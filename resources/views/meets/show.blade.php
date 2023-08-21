@@ -173,9 +173,39 @@
                 <textarea class="form-control @error('canceled_reason') is-invalid @enderror" id="canceled_reason" name="canceled_reason" readonly>{{ $meet->canceled_reason }}</textarea>
             </div>
 
+            <div class="form-group my-2 ">
+                <label for="create_link_meet">Crear enlace de meet?</label>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input @error('create_link_meet') is-invalid @enderror" id="create_link_meet" name="create_link_meet" {{ $meet->create_link_meet ? 'checked' : '' }} readonly>
+                    <label class="form-check-label" for="create_link_meet">Si</label>
+                </div>
+                @error('create_link_meet')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+
             <div class="form-group my-2">
                 <label for="link_meet" class="my-2">Enlace de Meet </label>
                 <input type="text" class="form-control @error('link_meet') is-invalid @enderror" id="link_meet" name="link_meet" value="{{ $meet->link_meet }}" readonly>
+            </div>
+
+            <div class="form-group my-2 ">
+                <label for="create_payment">Crear enlace de pago?</label>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input @error('create_payment') is-invalid @enderror" id="create_payment" name="create_payment" {{ $meet->create_payment ? 'checked' : '' }} readonly>
+                    <label class="form-check-label" for="create_payment">Si</label>
+                </div>
+                @error('create_payment')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="form-group my-2">
+                <label for="payment_link" class="my-2">Enlace de Pago </label>
+                <input type="text" class="form-control @error('payment_link') is-invalid @enderror" id="payment_link" name="payment_link" value="{{ $meet->payment_link }}" readonly>
+                @error('payment_link')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="form-group my-2">

@@ -283,35 +283,5 @@ class MeetService
 
     }
 
-    /*public function DeleteMeeting(int MeetingID){
-        return true;
-    }
-
-    public function makePayment(float discounted_price){
-        return true;
-    }*/
-
-    public function validatePayment(string $reference_id, string $payment_status, string $payment_id ){
-
-        try{
-            if(1==1){
-                return [
-                    'status' => true,
-                    'payment_status' => '',
-                    'payment_message' => 'El pago se ha validado se encuentra exitoso',
-                ];
-            }
-
-        }catch(\Exception $e){
-            return [
-                'status' => true,
-                'payment_status' => '',
-                'payment_message' => 'El pago no se ha validadr, intenta en un rato',
-            ];
-
-        }
-
-    }
-
 }
 

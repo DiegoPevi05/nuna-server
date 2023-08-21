@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/search-services-specialist',[AdminServiceController::class,'searchBySpecialist']);
         Route::get('/search-specialists',[AdminSpecialistController::class,'searchByName']);
         Route::get('/search-discounts',[AdminDiscountCodeController::class,'searchByName']);
+        Route::get('/meet-csv', [AdminMeetController::class,'GetMeetsData'])->name('meet.csv');
     });
 
     Route::middleware('role:' . User::ROLE_ADMIN)->group(function () {

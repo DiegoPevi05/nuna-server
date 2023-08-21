@@ -25,9 +25,11 @@ class ApiAuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        if (! $token = auth()->guard('api')->attempt($validator->validated())) {
+
+         if (! $token = auth()->guard('api')->attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+
         return $this->createNewToken($token);
     }
     /**
@@ -47,7 +49,7 @@ class ApiAuthController extends Controller
         $defaultRole = User::ROLE_USER;
         $user = User::create(array_merge(
                     $validator->validated(),
-                    ['password' => bcrypt($request->password),'role' => $defaultRole]
+                    ['password' => bcrypt($request->password),'role' => $defaultRole, 'email_verified_at' => now()]
                 ));
         return response()->json([
             'message' => 'User successfully registered',
@@ -91,8 +93,8 @@ class ApiAuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'user' => auth('api')->user()
         ]);
     }
 }

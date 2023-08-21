@@ -31,10 +31,21 @@
             </div>
         </div>
     </div>
-    <form class="d-flex flex-row form-inline py-2 col-5 gap-2 mb-4" action="{{ route('meets.index') }}" method="GET">
-        <input class="form-control mr-sm-2" type="date" name="date" placeholder="Buscar por Fecha" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0 col-3" type="submit">Buscar</button>
-    </form>
+    <div class="row align-items-center">
+        <div class="col">
+            <form class="d-flex flex-row form-inline py-2 col-5 gap-2 mb-4" action="{{ route('meets.index') }}" method="GET">
+                <input class="form-control mr-sm-2" type="date" name="date" placeholder="Buscar por Fecha" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0 col-3" type="submit">Buscar</button>
+            </form>
+        </div>
+        <div class="col-auto ms-auto">
+            <dic class="d-flex flex-row gap-2">
+                <input class="form-control mr-sm-2" type="date" name="from" id="from_date"  aria-label="Search">
+                <input class="form-control mr-sm-2" type="date" name="to" id="to_date" aria-label="Search">
+                <button class="btn btn-dark my-2 my-sm-0" onclick="getCSVData(event)" aria-label="Button">Descargar CSV</button>
+            </dic>
+        </div>
+    </div>
     <!--table uers-->
     <div class="table-responsive">
         <table class="table table-vcenter">
@@ -132,4 +143,5 @@
         </nav>
     </div>
     </div>
+    @include('config.meets-csv')
 @endsection

@@ -17,6 +17,12 @@ class AuthController extends Controller
 
     public function __construct(LogService $logService)
     {
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                return redirect()->route('home.index');
+            }
+            return $next($request);
+        });
         $this->logService = $logService;
     }
 

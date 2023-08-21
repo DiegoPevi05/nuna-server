@@ -32,9 +32,12 @@ return new class extends Migration
             $table->float('discounted_price')->nullable();
             $table->boolean('canceled')->nullable();
             $table->text('canceled_reason')->nullable();
+            $table->boolean('create_link_meet')->nullable();
             $table->text('link_meet')->nullable();
             $table->unsignedBigInteger('meeting_id')->nullable();
             $table->string('meeting_password')->nullable();
+            $table->boolean('create_payment')->nullable();
+            $table->text('payment_link')->nullable();
             $table->string('reference_id')->nullable();
             $table->string('payment_status')->nullable();
             $table->string('payment_id')->nullable();

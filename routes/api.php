@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiAuthController;
+use App\Http\Controllers\ApiWebController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,12 @@ Route::group([
     Route::post('/refresh', [ApiAuthController::class, 'refresh']);
     Route::get('/user-profile', [ApiAuthController::class, 'userProfile']);    
 });
+
+Route::group([
+    'prefix' => 'web'
+], function ($router) {
+    Route::get('/timesheets', [ApiWebController::class, 'getTimeSheets']);
+});
+
+
+

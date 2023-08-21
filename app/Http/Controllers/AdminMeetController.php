@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Models\Meet;
 use App\Models\MeetHistory;
 use Illuminate\Support\Facades\Mail;
@@ -11,6 +12,7 @@ use Carbon\Carbon;
 use App\Services\MeetService;
 use Illuminate\Support\Facades\Log;
 use App\Services\LogService;
+use App\Services\PaymentService;
 
 
 class AdminMeetController extends Controller
@@ -20,10 +22,13 @@ class AdminMeetController extends Controller
 
     protected $meetService;
 
-    public function __construct(MeetService $meetService, LogService $logService)
+    protected $paymentService;
+
+    public function __construct(MeetService $meetService, LogService $logService, PaymentService $paymentService)
     {
         $this->meetService = $meetService;
         $this->logService = $logService;
+        $this->paymentService = $paymentService;
     }
     /**
      * Display a listing of the resource.
@@ -90,7 +95,9 @@ class AdminMeetController extends Controller
             'discounted_price' => 'required|numeric',
             'canceled' => 'nullable',
             'canceled_reason' => 'nullable|string',
+            'create_link_meet' => 'nullable',
             'link_meet' => 'nullable|string',
+            'create_payment' => 'nullable',
             'reference_id' => 'nullable|string',
             'payment_status' => 'nullable|string',
             'payment_id' => 'nullable|string',
@@ -162,25 +169,29 @@ class AdminMeetController extends Controller
         $discounted_price = $response_calculated_amount['discounted_price'];
 
         //GENERATE MEET LINK
+        $create_link_meet = isset($validatedData['create_link_meet']) && $validatedData['create_link_meet'] ? true : false;
+
         $response_generate_link = [];
-        if(!isset($validatedData['link_meet']) || !$validatedData['link_meet']){
+        if($create_link_meet){
+            if(!isset($validatedData['link_meet']) || !$validatedData['link_meet']){
 
-            $response_generate_link = $this->meetService->GenerateMeetLink(
-                (int)$validatedData['user_id'], 
-                (int)$validatedData['specialist_id'],
-                $validatedData['date_meet'],
-                (int)$validatedData['duration']
-            );
+                $response_generate_link = $this->meetService->GenerateMeetLink(
+                    (int)$validatedData['user_id'], 
+                    (int)$validatedData['specialist_id'],
+                    $validatedData['date_meet'],
+                    (int)$validatedData['duration']
+                );
 
-            if($response_generate_link['status']){
-                $validatedData['link_meet'] = $response_generate_link['link_meet']; 
-            }else{
+                if($response_generate_link['status']){
+                    $validatedData['link_meet'] = $response_generate_link['link_meet']; 
+                }else{
 
-                $return_message = $response_generate_link['message'];
+                    $return_message = $response_generate_link['message'];
 
-                $this->logService->Log(4,$return_message);
+                    $this->logService->Log(4,$return_message);
 
-                return redirect()->route('meets.create')->with('logError', $return_message);
+                    return redirect()->route('meets.create')->with('logError', $return_message);
+                }
             }
         }
 
@@ -198,6 +209,7 @@ class AdminMeetController extends Controller
             'discounted_price' => $discounted_price,
             'canceled' => $canceled,
             'canceled_reason' => $validatedData['canceled_reason'],
+            'create_link_meet' => $create_link_meet,
             'link_meet' =>  isset($response_generate_link['link_meet']) ? $response_generate_link['link_meet'] : $validatedData['link_meet'],
             'meeting_id' =>  isset($response_generate_link['meeting_id']) ? $response_generate_link['meeting_id'] : 0,
             'meeting_passwrord' =>  isset($response_generate_link['meeting_password']) ? $response_generate_link['meeting_password'] : '' ,
@@ -214,11 +226,26 @@ class AdminMeetController extends Controller
                 'meet_id' => $meet->id,
             ]);
         }else{
-            $meetHistorycreated = MeetHistory::where('meet_id',$meet->id)->first();
-            if($meetHistorycreated){
-                $meetHistorycreated->delete();
+            $create_payment = isset($validatedData['create_payment']) && $validatedData['create_payment'] ? true : false;
+            if($create_payment){
+                $response_payment = $this->paymentService->makePayment();
+
+                if($response_payment['status']){
+
+                    $meet->create_payment = $create_payment;
+                    $meet->reference_id = $response_payment['preference_id']; 
+                    $meet->payment_link = $response_payment['init_point'];
+                    $meet->save();
+
+                }else{
+
+                    $return_message = $response_payment['payment_message'];
+                    $this->logService->Log(4,$return_message);
+                    return redirect()->route('meets.create')->with('logError', $return_message);
+                }
             }
         }
+        
 
         $return_message = 'Reunion creada exitosamente.';
 
@@ -275,7 +302,9 @@ class AdminMeetController extends Controller
             'discounted_price' => 'required|numeric',
             'canceled' => 'nullable',
             'canceled_reason' => 'nullable|string',
+            'create_link_meet'=>'nullable',
             'link_meet' => 'nullable|string',
+            'create_payment' => 'nullable',
             'reference_id' => 'nullable|string',
             'payment_status' => 'nullable|string',
             'payment_id' => 'nullable|string',
@@ -316,7 +345,6 @@ class AdminMeetController extends Controller
         $new_dateMeet = Carbon::parse($validatedData['date_meet'])->format('Y-m-d H:i:s');
         $existing_dateMeet = Carbon::parse($meet->date_meet)->format('Y-m-d H:i:s');
 
-        Log::info('Fecha de Sesión', ['meet' => $existing_dateMeet, 'new_dateMeet' => $new_dateMeet]);
         if($existing_dateMeet != $new_dateMeet){
 
             $response_checkavailability = $this->meetService->CheckAvailability(
@@ -355,27 +383,31 @@ class AdminMeetController extends Controller
         $discounted_price = $response_calculated_amount['discounted_price'];
 
         //GENERATE MEET LINK
+        $create_link_meet = isset($validatedData['create_link_meet']) && $validatedData['create_link_meet'] ? true : false;
+
         $response_generate_link = [];
-        if(!isset($validatedData['link_meet']) || !$validatedData['link_meet']){
+        if($create_link_meet){
+            if(!isset($validatedData['link_meet']) || !$validatedData['link_meet']){
 
-            $response_generate_link = $this->meetService->GenerateMeetLink(
-                (int)$validatedData['user_id'], 
-                (int)$validatedData['specialist_id'],
-                $validatedData['date_meet'],
-                (int)$validatedData['duration']
-            );
+                $response_generate_link = $this->meetService->GenerateMeetLink(
+                    (int)$validatedData['user_id'], 
+                    (int)$validatedData['specialist_id'],
+                    $validatedData['date_meet'],
+                    (int)$validatedData['duration']
+                );
 
-            if($response_generate_link['status']){
+                if($response_generate_link['status']){
 
-                $validatedData['link_meet'] = $response_generate_link['link_meet']; 
+                    $validatedData['link_meet'] = $response_generate_link['link_meet']; 
 
-            }else{
+                }else{
 
-                $return_message = $response_generate_link['message'];
+                    $return_message = $response_generate_link['message'];
 
-                $this->logService->Log(4,$return_message);
+                    $this->logService->Log(4,$return_message);
 
-                return redirect()->route('meets.edit',$meet)->with('logError', $return_message);
+                    return redirect()->route('meets.edit',$meet)->with('logError', $return_message);
+                }
             }
         }
 
@@ -393,6 +425,7 @@ class AdminMeetController extends Controller
             'discounted_price' => $discounted_price,
             'canceled' => $canceled,
             'canceled_reason' => $validatedData['canceled_reason'],
+            'create_link_meet' => $create_link_meet,
             'link_meet' =>  isset($response_generate_link['link_meet']) ? $response_generate_link['link_meet'] : $validatedData['link_meet'],
             'meeting_id' =>  isset($response_generate_link['meeting_id']) ? $response_generate_link['meeting_id'] : 0,
             'meeting_passwrord' =>  isset($response_generate_link['meeting_password']) ? $response_generate_link['meeting_password'] : '' ,
@@ -412,6 +445,25 @@ class AdminMeetController extends Controller
             $meetHistorycreated = MeetHistory::where('meet_id',$meet->id)->first();
             if($meetHistorycreated){
                 $meetHistorycreated->delete();
+            }
+
+            $create_payment = isset($validatedData['create_payment']) && $validatedData['create_payment'] ? true : false;
+            if($create_payment){
+                $response_payment = $this->paymentService->makePayment();
+
+                if($response_payment['status']){
+
+                    $meet->create_payment = $create_payment;
+                    $meet->reference_id = $response_payment['preference_id']; 
+                    $meet->payment_link = $response_payment['init_point'];
+                    $meet->save();
+
+                }else{
+
+                    $return_message = $response_payment['payment_message'];
+                    $this->logService->Log(4,$return_message);
+                    return redirect()->route('meets.edit')->with('logError', $return_message);
+                }
             }
         }
 
@@ -487,7 +539,7 @@ class AdminMeetController extends Controller
     }
 
     public function getPaymentStatus(Meet $meet){
-        $response_validatepayment = $this->meetService->validatePayment($meet->reference_id,$meet->payment_status,$meet->payment_id);
+        $response_validatepayment = $this->paymentService->validatePayment($meet->payment_id);
 
         if($response_validatepayment['status']){
 
@@ -505,6 +557,50 @@ class AdminMeetController extends Controller
 
             return redirect()->route('meets.index')->with('logError',$return_message);
         }
+    }
+
+    public function GetMeetsData(Request $request){
+
+
+        $start_date = $request->query('start_date');
+        $end_date = $request->query('end_date');
+
+        // Get the requested page from the query string
+        $startDate = Carbon::createFromFormat('Y-m-d', $start_date)->startOfDay();
+        $endDate = Carbon::createFromFormat('Y-m-d', $end_date)->endOfDay();
+
+        $meetsQuery = Meet::whereBetween('date_meet', [$startDate, $endDate]);
+
+        // For example, you can retrieve the meets within the specified date range:
+        $meets = $meetsQuery->get();
+
+        $csvFileName = 'meets.csv';
+
+        $headers = array(
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$csvFileName",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        );
+
+        $handle = fopen('php://output', 'w');
+        fputcsv($handle, array_keys($meets->first()->toArray()));
+
+        foreach ($meets as $meet) {
+            fputcsv($handle, $meet->toArray());
+        }
+
+        fclose($handle);
+
+        // Create the response with the correct content
+        $responseContent = ob_get_clean(); // Get the output buffer content
+
+        return new Response(
+            $responseContent,
+            200,
+            $headers
+        );
     }
 
 }

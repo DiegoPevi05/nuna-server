@@ -46,10 +46,13 @@ class AdminSpecialistController extends Controller
      */
     public function index(Request $request)
     {
-        $specialistsQuery = Specialist::query()->join('users', 'specialists.user_id', '=', 'users.id');
+        $specialistsQuery = Specialist::query()
+            ->join('users', 'specialists.user_id', '=', 'users.id')
+            ->select('specialists.*', 'users.name as user_name');
 
         // Check if the name search parameter is provided
         $name = $request->query('name');
+
         if ($name) {
             // Apply the name filter to the query
             $specialistsQuery->where('users.name', 'like', '%' . $name . '%');
@@ -74,8 +77,10 @@ class AdminSpecialistController extends Controller
             return redirect()->route('specialists.index');
         }
 
+
         $searchParam = $name ? $name : '';
 
+        
         // Return a view or JSON response as desired
         return view('specialists.index', compact('specialists', 'searchParam'));
     }
@@ -85,7 +90,7 @@ class AdminSpecialistController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         return view('specialists.create')->with('editMode', false);
     }
