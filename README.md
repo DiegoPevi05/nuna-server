@@ -1,6 +1,8 @@
 <p align="center">
   <a href="https://www.nuna.com.pe" target="_blank">
-    <img src="https://www.nuna.com.pe/server/public/LogoPink.jpeg" width="400">
+    <div style="width: 200px; height: 200px; border-radius: 50%; overflow: hidden;">
+      <img src="https://www.nuna.com.pe/server/public/LogoPink.jpeg" alt="Nuna Logo" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
   </a>
 </p>
 
