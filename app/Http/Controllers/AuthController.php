@@ -22,7 +22,7 @@ class AuthController extends Controller
                 return redirect()->route('home.index');
             }
             return $next($request);
-        });
+        })->except('logout');
         $this->logService = $logService;
     }
 

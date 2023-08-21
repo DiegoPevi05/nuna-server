@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MeetHistory;
+use App\Models\Meet;
+use PDF;
 
 class AdminMeetHistoryController extends Controller
 {
@@ -104,5 +106,11 @@ class AdminMeetHistoryController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function downloadBill($id){
+        $meet = Meet::where('id', $id )->first();
+        $pdf = PDF::loadView('pdf.bills', compact('meet','id'));
+        return $pdf->download('bill_' . $id . '.pdf');
     }
 }

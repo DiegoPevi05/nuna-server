@@ -70,7 +70,7 @@
                                     </svg>
                                 </button>
                             </form>
-                            <form action="{{ route('meethistories.index') }}" method="POST">
+                            <form action="{{ route('downloadBill', $meethistory->id) }}" method="POST">
                                 @csrf
                                 @method('GET')
                                 <button type="submit" class="btn btn-dark btn-md">
