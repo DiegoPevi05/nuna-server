@@ -42,22 +42,19 @@ To install the project on your local machine, you can follow these steps:
 
 1. Clone this repository to your local directory.
 2. Install project dependencies using the following command:
-
-	composer install
-
-
+```
+composer install
+```
 3. If you have limited server resources, consider installing dependencies locally and exporting the vendor folder using the following command:
-
-	composer dump-autoload
-
-
-
+```
+composer dump-autoload
+```
 ## Screenshots
 
 Here are some screenshots showcasing the dashboard in action:
 
-![Image1](https://github.com/DiegoPevi05/nuna-server/blob/main/public/github/Dashboard_1.png?raw=true)
+![Image1](https://github.com/DiegoPevi05/nuna-server/blob/main/public/github/Dashboard_3.png?raw=true)
 ![Image2](https://github.com/DiegoPevi05/nuna-server/blob/main/public/github/Dashboard_2.png?raw=true)
-![Image3](https://github.com/DiegoPevi05/nuna-server/blob/main/public/github/Dashboard_3.png?raw=true)
+![Image3](https://github.com/DiegoPevi05/nuna-server/blob/main/public/github/Dashboard_1.png?raw=true)
 
 Thank you for exploring the content of this README.md file. If you have any questions or suggestions, please feel free to reach out!
