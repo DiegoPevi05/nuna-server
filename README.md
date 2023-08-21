@@ -56,9 +56,8 @@ To install the project on your local machine, you can follow these steps:
 
 Here are some screenshots showcasing the dashboard in action:
 
-- Screenshot 1
-- Screenshot 2
-- Screenshot 3
-- Screenshot 4
+- ![Image1](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+- ![Image2](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+- ![Image3](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
 
 Thank you for exploring the content of this README.md file. If you have any questions or suggestions, please feel free to reach out!
