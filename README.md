@@ -6,6 +6,7 @@
 
 # Dashboard Meets Management
 
+This Backend application is developed to connect with the Front-End Web [NUNA](https://www.nuna.com.pe).
 Welcome to the Dashboard Meets Management project! This dashboard is designed to serve as a web application for effectively managing meetings in a therapist business named NUNA. Therapists can seamlessly create meetings, which are automatically generated using the Zoom API. Additionally, payments are efficiently processed through the Mercado Pago API. Here are the key features and details of this application:
 
 ## Features
