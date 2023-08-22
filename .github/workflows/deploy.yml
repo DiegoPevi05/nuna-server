@@ -1,0 +1,45 @@
+name: Deploy to SSH server
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Initialize Deploy
+      env:
+        SLACK_MESSAGE: "Initialize deploy of Nuna to Hostinger Server :github:"
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      run: |
+        echo "${SLACK_MESSAGE}"
+        curl -X POST -H 'Content-type: application/json' --data '{"text":"'"${SLACK_MESSAGE}"'"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up SSH key
+      uses: webfactory/ssh-agent@v0.7.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Add host key to known host
+      env:
+        SLACK_MESSAGE: "Set Connection and Enable it to SSH SERVER :hostinger:"
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      run: |
+        echo "${SLACK_MESSAGE}"
+        ssh-keyscan -p 65002 145.14.151.58 >> ~/.ssh/known_hosts
+        curl -X POST -H 'Content-type: application/json' --data '{"text":"'"${SLACK_MESSAGE}"'"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+    - name: Deploy
+      env:
+        SLACK_MESSAGE: "Pulling latest changes from Git repository on the server :git:"
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      run: |
+        echo "${SLACK_MESSAGE}"
+        ssh -p 65002 u996714911@145.14.151.58 'cd /home/u996714911/domains/nuna.com.pe/public_html/server/ && git pull'
+        curl -X POST -H 'Content-type: application/json' --data '{"text":"'"${SLACK_MESSAGE}"'"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+    - name: App Deploy
+      env:
+        SLACK_MESSAGE: "Laravel App deployed to server successfully :laravel:"
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      run: |
+        echo "${SLACK_MESSAGE}"
+        curl -X POST -H 'Content-type: application/json' --data '{"text":"'"${SLACK_MESSAGE}"'"}' ${{ secrets.SLACK_WEBHOOK_URL }}
