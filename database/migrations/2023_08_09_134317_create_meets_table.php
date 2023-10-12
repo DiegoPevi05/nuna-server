@@ -41,6 +41,7 @@ return new class extends Migration
             $table->string('reference_id')->nullable();
             $table->string('payment_status')->nullable();
             $table->string('payment_id')->nullable();
+            $table->string('external_reference')->nullable();
             $table->string('survey_status')->nullable();
             $table->float('rate')->nullable();
             $table->text('comment')->nullable();

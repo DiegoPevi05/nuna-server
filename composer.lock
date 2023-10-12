@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "623158c6e1b4791b9e292389de95f870",
+    "content-hash": "5ed8f37607f852f2787c9fb6df65127a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2236,46 +2236,6 @@
                 "source": "https://github.com/Masterminds/html5-php/tree/2.8.1"
             },
             "time": "2023-05-10T11:58:31+00:00"
-        },
-        {
-            "name": "mercadopago/dx-php",
-            "version": "dev-poc-mapping",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mercadopago/sdk-php.git",
-                "reference": "645dd3350c2b8a80058b2e1a7a0fef262df9538f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mercadopago/sdk-php/zipball/645dd3350c2b8a80058b2e1a7a0fef262df9538f",
-                "reference": "645dd3350c2b8a80058b2e1a7a0fef262df9538f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "MercadoPago\\": [
-                        "src/MercadoPago",
-                        "tests/MercadoPago"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "[POC] Mercado Pago PHP SDK",
-            "homepage": "https://github.com/mercadopago/sdk-php",
-            "support": {
-                "source": "https://github.com/mercadopago/sdk-php/tree/poc-mapping"
-            },
-            "time": "2023-05-04T12:36:45+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -8794,14 +8754,12 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "mercadopago/dx-php": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.0.2"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

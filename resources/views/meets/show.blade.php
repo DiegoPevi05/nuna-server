@@ -214,10 +214,28 @@
             </div>
 
             <div class="form-group my-2">
+                <label for="external_reference" class="my-2">Referencia Interna </label>
+                <input type="text" class="form-control @error('external_reference') is-invalid @enderror" id="external_reference" name="external_reference" value="{{ $meet->external_reference }}" readonly>
+            </div>
+            <div class="form-group my-2">
                 <label for="reference_id" class="my-2">ID de referencia </label>
                 <input type="text" class="form-control @error('reference_id') is-invalid @enderror" id="reference_id" name="reference_id" value="{{ $meet->reference_id }}" readonly>
             </div>
 
+            <div class="btn-list">
+                <form action="{{ route('getPaymentStatus', $meet->id) }}" method="POST">
+                    @csrf
+                    @method('POST')
+                    <button type="submit" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-report">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wallet" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                           <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                           <path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"></path>
+                           <path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"></path>
+                        </svg>
+                         Validar Pago
+                    </button>
+                </form>
+            </div>
             <div class="form-group my-2">
                 <label for="payment_status" class="my-2">Estado del Pago</label>
                 <select class="form-control @error('payment_status') is-invalid @enderror" id="payment_status" name="payment_status" readonly>

@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/search-discounts',[AdminDiscountCodeController::class,'searchByName']);
         Route::get('/meet-csv', [AdminMeetController::class,'GetMeetsData'])->name('meet.csv');
         Route::get('/download-bill/{id}',[AdminMeetHistoryController::class,'downloadBill'])->name('downloadBill');
+        Route::post('/validate-payment/{id}', [AdminMeetController::class,'GetPaymentStatus'])->name('getPaymentStatus');
     });
 
     Route::middleware('role:' . User::ROLE_ADMIN)->group(function () {

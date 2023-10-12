@@ -228,13 +228,14 @@ class AdminMeetController extends Controller
         }else{
             $create_payment = isset($validatedData['create_payment']) && $validatedData['create_payment'] ? true : false;
             if($create_payment){
-                $response_payment = $this->paymentService->makePayment();
+                $response_payment = $this->paymentService->makePayment($meet, 'Pago de servicio nuna', 'Servicios de Psicologia y Terapia');
 
                 if($response_payment['status']){
 
                     $meet->create_payment = $create_payment;
                     $meet->reference_id = $response_payment['preference_id']; 
                     $meet->payment_link = $response_payment['init_point'];
+                    $meet->external_reference = $response_payment['external_reference']; 
                     $meet->save();
 
                 }else{
@@ -449,12 +450,14 @@ class AdminMeetController extends Controller
 
             $create_payment = isset($validatedData['create_payment']) && $validatedData['create_payment'] ? true : false;
             if($create_payment){
-                $response_payment = $this->paymentService->makePayment();
+
+                $response_payment = $this->paymentService->makePayment($meet, 'Pago de servicio nuna', 'Servicios de Psicologia y Terapia');
 
                 if($response_payment['status']){
 
                     $meet->create_payment = $create_payment;
                     $meet->reference_id = $response_payment['preference_id']; 
+                    $meet->external_reference = $response_payment['external_reference']; 
                     $meet->payment_link = $response_payment['init_point'];
                     $meet->save();
 
@@ -538,16 +541,41 @@ class AdminMeetController extends Controller
 
     }
 
-    public function getPaymentStatus(Meet $meet){
-        $response_validatepayment = $this->paymentService->validatePayment($meet->payment_id);
+    public function GetPaymentStatus($id){
+
+        $meet = Meet::where('id', $id )->first();
+
+        $response_validatepayment = $this->paymentService->validatePayment($meet);
 
         if($response_validatepayment['status']){
+
+            if($response_validatepayment['payment_status'] === 'approved'){
+
+                $meet->payment_status = Meet::PAYMENT_STATUS_3;
+
+                $meetHistorycreated = MeetHistory::where('meet_id',$meet->id)->first();
+                if(!$meetHistorycreated){
+                    $meethistory = MeetHistory::create([
+                        'meet_id' => $meet->id,
+                    ]);
+                }
+
+            }else if($response_validatepayment['payment_status'] === 'rejected'){
+
+                $meet->payment_status = Meet::PAYMENT_STATUS_4;
+
+            }else{
+                $meet->payment_status = Meet::PAYMENT_STATUS_2;
+            }
+
+            $meet->payment_id = $response_validatepayment['payment_id'];
+            $meet->save();
 
             $return_message = $response_validatepayment['payment_message'];
 
             $this->logService->Log(1,$return_message);
 
-            return redirect()->route('meets.index')->with('logSuccess', $return_message);
+            return redirect()->route('meets.show',$meet)->with('logSuccess', $return_message);
 
         }else{
 
@@ -555,7 +583,7 @@ class AdminMeetController extends Controller
 
             $this->logService->Log(4,$return_message);
 
-            return redirect()->route('meets.index')->with('logError',$return_message);
+            return redirect()->route('meets.show',$meet)->with('logError', $return_message);
         }
     }
 

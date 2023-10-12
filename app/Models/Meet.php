@@ -37,6 +37,7 @@ class Meet extends Model
         'reference_id',
         'payment_status',
         'payment_id',
+        'external_reference',
         'survey_status',
         'rate',
         'comment'
