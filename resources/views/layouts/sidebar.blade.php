@@ -5,7 +5,7 @@
               <span class="navbar-toggler-icon"></span>
           </button>
           <h1 class="navbar-brand navbar-brand-autodark">
-              <a href="#">
+              <a href="{{env('FRONTEND_URL')}}">
                   <img src="{{env('BACKEND_URL_IMAGE')}}/LogoPink.jpeg" style="width: 50px; height: 50px; border-radius: 50%;" alt="Tabler" class="navbar-brand-image">
               </a>
           </h1>

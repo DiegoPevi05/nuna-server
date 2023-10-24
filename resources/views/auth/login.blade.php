@@ -3,7 +3,7 @@
 <div class="container container-tight py-4">
     @extends('config.log')
     <div class="text-center mb-4">
-        <a href="/" class="navbar-brand navbar-brand-autodark">
+        <a href="{{env('FRONTEND_URL')}}" class="navbar-brand navbar-brand-autodark">
             <img src="{{env('BACKEND_URL_IMAGE')}}/LogoPink.jpeg" style="width: 100px; height: 100px; border-radius: 50%;" alt="Tabler" class="navbar-brand-image">
         </a>
     </div>
@@ -72,7 +72,7 @@
                 </div>-->
     </div>
     <div class="text-center text-secondary mt-3">
-        Si no tienes una cuenta consulta con el administrador.
+          No tienes cuenta? <a href="{{"register"}}" tabindex="-1">Registrate</a>
     </div>
 </div>
 
@@ -90,5 +90,9 @@
             }
         });
     });
+
+    function storeValueInLocalStorage(key, value) {
+        localStorage.setItem(key, value);
+    }
 </script>
 @endsection

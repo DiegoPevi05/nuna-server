@@ -31,6 +31,11 @@ class AuthController extends Controller
         return view('auth.login'); // Use the correct view path
     }
 
+    public function showRegisterForm()
+    {
+        return view('auth.register'); // Use the correct view path
+    }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -55,6 +60,34 @@ class AuthController extends Controller
         }
 
         return redirect()->route('login')->withInput($request->only('email'))->with('logError','No se ha podido ingresar correctamente');
+    }
+
+    public function register(Request $request){
+
+        $validatedData = $request->validate([
+            'name' => 'required|max:25',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+        ], [
+            'name.required' => 'El campo nombre es obligatorio.',
+            'name.max' => 'El campo nombre no puede tener más de 25 caracteres.',
+            'email.required' => 'El campo correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe tener un formato válido.',
+            'email.unique' => 'El correo electrónico ya está en uso.',
+            'password.required' => 'El campo contraseña es obligatorio.',
+            'password.regex' => 'La contraseña debe contener al menos una mayúscula, una minúscula, un número, un carácter especial (@$!%*?&), y tener al menos 8 caracteres.',
+        ]);
+
+        // Create a new user with the specified role
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']),
+            'role' => User::ROLE_USER,
+            'email_verified_at' => now(),
+        ]);
+
+        return redirect()->route('login')->withInput($request->only('email'))->with('logSuccess','Registro exitoso');
     }
 
     public function showRecoverPasswordForm()

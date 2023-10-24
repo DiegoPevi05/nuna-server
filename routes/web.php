@@ -74,6 +74,8 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('validate-zoom-token', [ZoomController::class, 'callBackZoomUri']);
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::get('recover-password', [AuthController::class, 'showRecoverPasswordForm'])->name('recover-password');
 Route::post('recover-password', [AuthController::class, 'recoverPassword']);
