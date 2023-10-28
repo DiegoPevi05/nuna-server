@@ -132,7 +132,7 @@ class ApiWebController extends Controller
             $specialistItem->awards = json_decode($specialistItem->awards);
         }
 
-        $services = Service::where('is_active', 1)->select('id','name','options')>get();
+        $services = Service::where('is_active', 1)->select('id','name','options')->get();
 
         // Return a view or JSON response as desired
         return response()->json([
