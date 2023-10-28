@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Meet;
 use App\Models\SpecialistTimes;
 use App\Models\Specialist;
+use App\Models\Service;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -131,11 +132,13 @@ class ApiWebController extends Controller
             $specialistItem->awards = json_decode($specialistItem->awards);
         }
 
+        $services = Service::where('is_active', 1)->select('id','name','options')>get();
 
         // Return a view or JSON response as desired
         return response()->json([
             'time_sheets' => $splitTimesheets,
             'specialist' => $specialist,
+            'services' => $services
         ]);
 
     }
