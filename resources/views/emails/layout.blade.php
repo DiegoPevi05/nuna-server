@@ -35,7 +35,7 @@
 
         body {
             -webkit-text-size-adjust: none;
-            background-color: #15002E;
+            background-color: #fdf7ed;
             color: #718096;
             height: 100%;
             line-height: 1.4;
@@ -105,7 +105,7 @@
             -premailer-cellpadding: 0;
             -premailer-cellspacing: 0;
             -premailer-width: 100%;
-            background-color: #15002E;
+            background-color: #fdf7ed;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -148,9 +148,9 @@
             -premailer-cellpadding: 0;
             -premailer-cellspacing: 0;
             -premailer-width: 100%;
-            background-color: #15002E;
-            border-bottom: 1px solid #15002E;
-            border-top: 1px solid #15002E;
+            background-color: #fdf7ed;
+            border-bottom: 1px solid #fdf7ed;
+            border-top: 1px solid #fdf7ed;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -325,13 +325,13 @@
                 <tr>
                     <td class="header">
                         <a href="https://nuna.com.pe/Logo.png" style="display: inline-block;">
-                            <img src="./LogoPink.jpeg" class="logo" alt="La Abuela Norma">
+                            <img src="./LogoPink.jpeg" class="logo" alt="Nuna">
                         </a>
                     </td>
                 </tr>
                 @yield('email-content')
                 <td class="content-cell" align="center">
-                    © {{ date('Y') }} @lang(' La Abuela Norma Todos los derechos reservados.')
+                    © {{ date('Y') }} @lang(' Nuna Todos los derechos reservados.')
                 </td>
         </td>
     </tr>

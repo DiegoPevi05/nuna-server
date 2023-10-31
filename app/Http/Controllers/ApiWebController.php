@@ -9,6 +9,9 @@ use App\Models\Specialist;
 use App\Models\Service;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Mail\JoinUs;
+use App\Mail\ReplyJoinUs;
+use Illuminate\Support\Facades\Mail;
 
 
 class ApiWebController extends Controller
@@ -19,16 +22,17 @@ class ApiWebController extends Controller
         //TIMESHEETS
         $specialiststimesQuery = SpecialistTimes::query();
         // Select the desired fields, including user.name
-        $week = $request->query('week');
-        if($week && $week > 0){
+        $range = $request->query('range');
+        $page = $request->query('page');
+        if($range > 0 && $page >= 0){
 
             $currentDay = now()->setSeconds(0)->setMinutes(0)->setHours(0);
-            $followingSevenDays = now()->setSeconds(59)->setMinutes(59)->setHours(23)->addDays(7);
-            $start_search_datetime = $currentDay->copy()->addWeek($week);
-            $end_search_datetime = $followingSevenDays->copy()->addWeek($week);
+            $startDay = $currentDay->copy()->addDays($range * $page);
+            $followingXDays = $currentDay->copy()->addDays($range * ($page + 1));
 
-             $specialiststimesQuery->where('start_date', '<=',$end_search_datetime)
-                ->where('end_date','>=', $start_search_datetime);
+            $followingXDays->setHours(23)->setMinutes(59)->setSeconds(59);
+            $specialiststimesQuery->where('start_date', '<=', $followingXDays)
+                ->where('end_date', '>=', $startDay);
         }else{
             //GET IMPORT in the last 7 days
             //
@@ -143,7 +147,30 @@ class ApiWebController extends Controller
 
     }
 
-    public function callBackPayment(Reques $request){
+    public function joinUsForm(Request $request){
+
+        // Check the Authorization header
+        $authHeader = $request->header('Authorization');
+        $AuthHeaderCode = env('MAIL_HEADER_SENDER');
+        if ($authHeader !== $AuthHeaderCode) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $city = $request->input('city');
+        $phone = $request->input('phone');
+
+        $mailable = new JoinUs($name);
+        Mail::to($email)->send($mailable);
+
+        $mailableReply = new ReplyJoinUs($name, $email, $city, $phone);
+        $recipients = ['administracion@nuna.com.pe','tsanchez@nuna.com.pe','kaldazabal@nuna.com.pe'];
+        Mail::to($recipients)->send($mailableReply);  
+
+    }
+
+    public function callBackPayment(Request $request){
 
     }
 

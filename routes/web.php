@@ -79,3 +79,4 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::get('recover-password', [AuthController::class, 'showRecoverPasswordForm'])->name('recover-password');
 Route::post('recover-password', [AuthController::class, 'recoverPassword']);
+

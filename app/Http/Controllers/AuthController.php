@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RecoverPassword;
 use App\Services\LogService;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -52,11 +53,21 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
 
-            $return_message = 'Ha iniciado Sesión.';
-
-            $this->logService->Log(3,$return_message);
-
-            return redirect()->route('home.index');
+             // Check the user's role
+            $user = Auth::user();
+            if ($user->role === User::ROLE_USER) {
+                $token = auth()->guard('api')->attempt($credentials);
+                Log::info('Token: ' . $token);
+                // Redirect to an external URL for users with the role "User"
+                //return redirect()->away(env('FRONTEND_URL'))
+                //->withCookie(cookie('jwt_token', $token, 1440)); 
+                return redirect()->away(env('FRONTEND_URL') . '?token=' . $token);
+            } else {
+                $return_message = 'Ha iniciado Sesión.';
+                $this->logService->Log(3, $return_message);
+                // Redirect to the internal route for other roles
+                return redirect()->route('home.index');
+            }
         }
 
         return redirect()->route('login')->withInput($request->only('email'))->with('logError','No se ha podido ingresar correctamente');
