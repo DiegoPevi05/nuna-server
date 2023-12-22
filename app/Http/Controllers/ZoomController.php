@@ -57,8 +57,11 @@ class ZoomController extends Controller
                     "redirect_uri" => env('REDIRECT_URI_ZOOM')
                 ],
             ]);
-          
+            
             $token = json_decode($response->getBody()->getContents(), true);
+
+            Log::info("This is the first generated token",$token);
+
             $tokenDb->update([
                 'access_token' => json_encode($token),
             ]);

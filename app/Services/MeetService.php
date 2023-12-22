@@ -241,7 +241,7 @@ class MeetService
         }catch(\Exception $e){
             if( 401 == $e->getCode()) {
                 $refresh_token = $arrToken['refresh_token'];
-                Log::info($refresh_token);
+                Log::info("This is the refresh token",$refresh_token);
       
                 $client = new GuzzleHttpClient(['base_uri' => 'https://zoom.us']);
                 $response = $client->request('POST', '/oauth/token', [
@@ -255,7 +255,7 @@ class MeetService
                 ]);
 
                 $token_refresh_response = json_decode($response->getBody()->getContents(), true);
-                Log::info($token_refresh_response);
+                Log::info("This is the refreshed token",$token_refresh_response);
                 $tokenDb->update([
                     'access_token' => json_encode($token_refresh_response)
                 ]);

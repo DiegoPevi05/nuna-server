@@ -228,7 +228,7 @@ class AdminMeetController extends Controller
         }else{
             $create_payment = isset($validatedData['create_payment']) && $validatedData['create_payment'] ? true : false;
             if($create_payment){
-                $response_payment = $this->paymentService->makePayment($meet, 'Pago de servicio nuna', 'Servicios de Psicologia y Terapia');
+                $response_payment = $this->paymentService->makePayment([$meet], 'Pago de servicio nuna', 'Servicios de Psicologia y Terapia');
 
                 if($response_payment['status']){
 
@@ -451,7 +451,7 @@ class AdminMeetController extends Controller
             $create_payment = isset($validatedData['create_payment']) && $validatedData['create_payment'] ? true : false;
             if($create_payment){
 
-                $response_payment = $this->paymentService->makePayment($meet, 'Pago de servicio nuna', 'Servicios de Psicologia y Terapia');
+                $response_payment = $this->paymentService->makePayment([$meet], 'Pago de servicio nuna', 'Servicios de Psicologia y Terapia');
 
                 if($response_payment['status']){
 

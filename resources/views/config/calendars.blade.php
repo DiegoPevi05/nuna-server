@@ -53,7 +53,6 @@
 
     const meets = @json($meets);
 
-
     const calendarContainer = document.getElementById("calendar-container");
     const weekdays = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
@@ -165,7 +164,14 @@
 
     const generateCalendar = () => {
 
-        const currentDate = new Date("{{ $currentDate }}");
+        const parts = "{{ $currentDate }}".split('-'); // Assuming $currentDate is '2023-12-01'
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1; // Adjust month for 0-indexing
+        const day = parseInt(parts[2], 10);
+
+        const currentDate = new Date(year, month, day);
+
+        console.log(currentDate);
 
         let date;
         if (currentDate) {
@@ -248,7 +254,7 @@
                     }
 
                     //Check and add Meet the hover day
-                    const meetingsOnThisDay = meets.filter(meet => moment(meet.date_meet).isSame(day, 'day'));
+                    const meetingsOnThisDay = meets.filter(meet => moment.utc(meet.date_meet, "YYYY-MM-DD HH:mm:ss").startOf('day').isSame(moment.utc(day).startOf('day')));
 
                     if (meetingsOnThisDay.length > 0) {
 

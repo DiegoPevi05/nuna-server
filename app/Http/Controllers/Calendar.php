@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Specialist;
 use App\Models\Meet;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class Calendar extends Controller
 {
@@ -54,6 +55,8 @@ class Calendar extends Controller
         // Remove pagination
         $meetsQuery->orderBy('date_meet', 'asc');
         $meets = $meetsQuery->get(); // Fetch all results
+
+        Log::info(["currentDate",$currentDate]);
 
         // Return a view or JSON response as desired
         return view('calendars.index', compact('meets','currentDate'));

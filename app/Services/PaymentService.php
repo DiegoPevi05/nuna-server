@@ -9,9 +9,20 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 
-function generateExternalReference(Meet $meet) {
+function generateExternalReference(array $meets) {
+    $meetIds = [];
+
+    foreach ($meets as $meet) {
+        if ($meet instanceof Meet) {
+            // Add the meet ID to the $meetIds array
+            $meetIds[] = $meet->id;
+        }
+    }
+    // Concatenate all meet IDs separated by '%'
+    $idsString = implode('%', $meetIds);
+
     $currentDate = date('Y-m-d');
-    $externalReference = $meet->id . '-' . $meet->service_id . '-' . $currentDate;
+    $externalReference = $idsString  . '-' . count($meets) . '-' . $currentDate;
     return $externalReference;
 }
 
@@ -20,7 +31,7 @@ class PaymentService
 {
 
     public function makePayment(
-        Meet $meet,
+        array $meets,
         string $title, 
         string $description, 
     ){
@@ -29,27 +40,36 @@ class PaymentService
             $url = 'https://api.mercadopago.com/checkout/preferences';
             $accessToken = env('MP_ACCESS_TOKEN'); 
 
-            $externalReference = generateExternalReference($meet);
+            $externalReference = generateExternalReference($meets);
 
-            $data = [
-                "items" => [
-                    [
+            $itemsToBill = [];
+
+            foreach ($meets as $meet) {
+                // Check if $meet is an instance of Meet class
+                if ($meet instanceof Meet) {
+                    $item = [
                         "id" => $meet->service_id,
                         "title" => $title,
                         "description" => $description,
                         "currency_id" => "PEN",
                         "quantity" => 1,
                         "unit_price" => (float) $meet->discounted_price,
-                    ]
-                ],
+                    ];
+
+                    $itemsToBill[] = $item;
+                }
+            }
+
+            $data = [
+                "items" => $itemsToBill,
                 "payer" => [
-                    "name" => $meet->user->name,
-                    "email" => $meet->user->email
+                    "name" => $meets[0]->user->name,
+                    "email" => $meets[0]->user->email
                 ],
                 "back_urls" => [
-                    "success" => env('BACKEND_URL') . 'confirmationpayment?meetID=' . $meet->id,
-                    "failure" => env('BACKEND_URL') . 'confirmationpayment?meetID=' . $meet->id,
-                    "pending" => env('BACKEND_URL') . 'confirmationpayment?meetID=' . $meet->id
+                    "success" => env('BACKEND_URL') . '/api/web/confirmationpayment?externalReference=' . $externalReference,
+                    "failure" => env('BACKEND_URL') . '/api/web/confirmationpayment?$externalReference=' . $externalReference,
+                    "pending" => env('BACKEND_URL') . '/api/web/confirmationpayment?$externalReference=' . $externalReference
                 ],
                 "auto_return" => "approved",
                 "external_reference" => $externalReference,

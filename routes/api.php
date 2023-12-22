@@ -22,7 +22,7 @@ Route::group([
 ], function ($router) {
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/logout', [ApiAuthController::class, 'logout']);
-    Route::get('/user-profile', [ApiAuthController::class, 'userProfile']);    
+    Route::get('/user-profile', [ApiAuthController::class, 'userProfile']);
 });
 
 Route::group([
@@ -30,6 +30,10 @@ Route::group([
 ], function ($router) {
     Route::get('/timesheets', [ApiWebController::class, 'getTimeSheets']);
     Route::post('/join-us', [ApiWebController::class, 'joinUsForm']);
+    Route::post('/discount-code',[ApiWebController::class, 'checkDiscountCode']);
+    Route::post('/make-order', [ApiWebController::class, 'makeOrder']);
+    Route::get('/confirmationpayment', [ApiWebController::class, 'callBackPayment']);
+    Route::get('/sessions', [ApiWebController::class, 'getSessions']);
 });
 
 
